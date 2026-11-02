@@ -1,0 +1,775 @@
+@{
+    ViewData["Title"] = "Masuk";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#387FB9">
+    <title>Masuk - Sispen (Sistem Penilaian Kinerja)</title>
+
+    <!-- Google Font: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        /* ==========================================================================
+           TEMA WARNA DASAR: #387FB9 (LUXURY EXECUTIVE AZURE BLUE)
+           Terinspirasi dari templat latar belakang mewah halaman arahan / login UI
+           ========================================================================== */
+        :root {
+            --brand-primary: #387FB9;
+            --brand-dark: #225884;
+            --brand-deep: #163d5c;
+            --brand-light: #529cd3;
+            --brand-soft: #eef5fb;
+            --brand-tint: #d6e8f6;
+            --brand-border: #b8d8ef;
+            --text-heading: #0f2438;
+            --text-body: #334d65;
+            --text-muted: #627d98;
+            --border-light: #d8e5f0;
+            --canvas-bg: #f4f8fc;
+            --card-glass: rgba(255, 255, 255, 0.92);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100vh;
+            max-height: 100vh;
+            overflow: hidden;
+            background-color: var(--canvas-bg);
+            color: var(--text-heading);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* 100vh Split Screen (Zero Scroll Guaranteed) */
+        .luxury-portal-frame {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+            max-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* ==========================================================================
+           PANEL KIRI (60%): LUXURY LANDING SHOWCASE & GELOMBANG ESTETIK
+           ========================================================================== */
+        .luxury-landing-pane {
+            flex: 0 0 60%;
+            width: 60%;
+            height: 100vh;
+            max-height: 100vh;
+            background: linear-gradient(145deg, #eaf2f9 0%, #f4f8fc 45%, #e1eef8 100%);
+            border-right: 1px solid var(--border-light);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 34px 50px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Luxury Flowing Wave Graphic (#387FB9) */
+        .luxury-waves-backdrop {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.95;
+        }
+
+        .ambient-radial-glow {
+            position: absolute;
+            top: -60px;
+            left: -60px;
+            width: 440px;
+            height: 440px;
+            background: radial-gradient(circle, rgba(56, 127, 185, 0.16) 0%, transparent 68%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .ambient-radial-glow-2 {
+            position: absolute;
+            bottom: -60px;
+            right: -60px;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(34, 88, 132, 0.12) 0%, transparent 68%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .landing-content-stack {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        /* Top Brand Row */
+        .luxury-brand-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .luxury-brand-group {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .luxury-emblem {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-dark) 100%);
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 20px;
+            box-shadow: 0 8px 18px -3px rgba(56, 127, 185, 0.42);
+        }
+
+        .luxury-brand-text h2 {
+            font-size: 21px;
+            font-weight: 800;
+            color: var(--text-heading);
+            margin: 0;
+            line-height: 1.15;
+            letter-spacing: -0.025em;
+        }
+
+        .luxury-brand-text span {
+            font-size: 11.5px;
+            color: var(--text-muted);
+            font-weight: 600;
+            display: block;
+        }
+
+        .luxury-cycle-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 5px 14px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--brand-border);
+            border-radius: 999px;
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--brand-deep);
+            box-shadow: 0 4px 12px rgba(56, 127, 185, 0.08);
+            backdrop-filter: blur(8px);
+        }
+
+        .status-pulse-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background-color: #10b981;
+            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3);
+        }
+
+        /* Center Editorial Body (Div Ketengah Vertikal & Horizontal, Padding Dalam Luas & Berisi) */
+        .luxury-hero-center {
+            margin: auto;
+            max-width: 880px;
+            width: 100%;
+            padding: 48px 56px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+        }
+
+        .luxury-hero-title {
+            font-size: clamp(36px, 3.2vw, 46px);
+            font-weight: 800;
+            color: var(--text-heading);
+            line-height: 1.22;
+            letter-spacing: -0.03em;
+            margin-bottom: 16px;
+            text-align: left;
+        }
+
+        .luxury-hero-title .title-highlight {
+            display: inline;
+            color: var(--brand-primary);
+            background: linear-gradient(135deg, #387FB9 0%, #174d75 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .luxury-hero-lead {
+            font-size: clamp(15.5px, 1.2vw, 17.5px);
+            color: #3b526b;
+            line-height: 1.68;
+            margin-bottom: 0;
+            max-width: 720px;
+            text-align: left;
+            font-weight: 400;
+        }
+
+        /* Bottom Footer Left */
+        .luxury-footer-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 11.5px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* ==========================================================================
+           PANEL KANAN (40%): FORM LOGIN BERKELAS & ELEGAN
+           ========================================================================== */
+        .luxury-auth-pane {
+            flex: 0 0 40%;
+            width: 40%;
+            height: 100vh;
+            max-height: 100vh;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 32px 50px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: -8px 0 30px rgba(56, 127, 185, 0.04);
+        }
+
+        .auth-form-card {
+            width: 100%;
+            max-width: 360px;
+        }
+
+        .auth-headings-unit {
+            margin-bottom: 22px;
+        }
+
+        .luxury-entry-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 3px 9px;
+            background: var(--brand-soft);
+            border: 1px solid var(--brand-tint);
+            border-radius: 6px;
+            font-size: 10.5px;
+            font-weight: 800;
+            color: var(--brand-primary);
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .auth-headings-unit h1 {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-heading);
+            letter-spacing: -0.025em;
+            margin-bottom: 4px;
+        }
+
+        .auth-headings-unit p {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.45;
+            margin: 0;
+        }
+
+        /* Notification Alert Banner */
+        .luxury-alert-banner {
+            display: none;
+            align-items: center;
+            gap: 9px;
+            padding: 9px 12px;
+            border-radius: 9px;
+            font-size: 12px;
+            line-height: 1.35;
+            margin-bottom: 16px;
+        }
+
+        .luxury-alert-banner.alert-has-error {
+            display: flex;
+            background-color: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #b91c1c;
+        }
+
+        .luxury-alert-banner.alert-has-success {
+            display: flex;
+            background-color: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #15803d;
+        }
+
+        /* Form Inputs */
+        .form-unit-group {
+            margin-bottom: 16px;
+        }
+
+        .form-unit-label-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .form-label-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1e3a56;
+            letter-spacing: -0.01em;
+        }
+
+        .forgot-pass-link {
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--brand-primary);
+            text-decoration: none;
+            transition: color 0.15s ease;
+        }
+
+        .forgot-pass-link:hover {
+            color: var(--brand-dark);
+            text-decoration: underline;
+        }
+
+        .input-shell-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon-lead {
+            position: absolute;
+            left: 13px;
+            color: #8fa7be;
+            font-size: 14px;
+            pointer-events: none;
+        }
+
+        .form-input-azure {
+            width: 100%;
+            height: 44px;
+            padding: 0 40px 0 38px;
+            background-color: #f8fbfe;
+            border: 1.5px solid #c9ddec;
+            border-radius: 10px;
+            font-size: 13.5px;
+            color: var(--text-heading);
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .form-input-azure:focus {
+            background-color: #ffffff;
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 4px rgba(56, 127, 185, 0.16);
+        }
+
+        .btn-mask-toggle {
+            position: absolute;
+            right: 8px;
+            background: none;
+            border: none;
+            color: #8fa7be;
+            cursor: pointer;
+            padding: 8px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+        }
+
+        .btn-mask-toggle:hover {
+            color: var(--text-heading);
+        }
+
+        /* Checkbox Row */
+        .form-remember-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            font-size: 12px;
+            color: #475569;
+        }
+
+        .remember-checkbox-box {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .remember-checkbox-box input[type="checkbox"] {
+            width: 15px;
+            height: 15px;
+            accent-color: var(--brand-primary);
+            cursor: pointer;
+        }
+
+        /* Primary Action Button (#387FB9) */
+        .btn-action-primary {
+            width: 100%;
+            height: 45px;
+            background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-dark) 100%);
+            border: none;
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            box-shadow: 0 8px 18px -4px rgba(56, 127, 185, 0.42);
+            transition: all 0.2s ease;
+        }
+
+        .btn-action-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 22px -4px rgba(56, 127, 185, 0.52);
+            background: linear-gradient(135deg, #428ec7 0%, var(--brand-primary) 100%);
+        }
+
+        .btn-action-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-action-primary:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .auth-footer-note {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 11.5px;
+            color: var(--text-muted);
+        }
+
+        /* Responsive Breakpoints (Zero Scroll on Any Laptop / Display) */
+        @@media (max-height: 720px) {
+            .luxury-landing-pane {
+                padding: 16px 28px;
+            }
+            .luxury-hero-center {
+                padding: 24px 32px;
+            }
+            .luxury-hero-title {
+                font-size: clamp(28px, 3vw, 36px);
+                margin-bottom: 10px;
+                line-height: 1.2;
+            }
+            .luxury-hero-lead {
+                font-size: clamp(13.5px, 1.2vw, 15px);
+                margin-bottom: 0;
+                line-height: 1.5;
+            }
+            .form-unit-group {
+                margin-bottom: 12px;
+            }
+            .form-input-azure {
+                height: 40px;
+            }
+            .btn-action-primary {
+                height: 40px;
+            }
+        }
+
+        @@media (max-width: 991px) {
+            .luxury-landing-pane {
+                display: none;
+            }
+            .luxury-auth-pane {
+                flex: 0 0 100%;
+                width: 100%;
+                padding: 24px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ATURAN 1: Tepat sesudah <body> WAJIB langsung dibungkus container-fluid overflow-hidden px-0 position-relative min-vh-100 -->
+    <div class="container-fluid overflow-hidden px-0 position-relative min-vh-100">
+
+        <div class="luxury-portal-frame">
+
+            <!-- ================================================================
+                 SISI KIRI (60%): LANDING SHOWCASE DENGAN LATAR BELAKANG MEWAH
+                 Warna Dasar: #387FB9 dengan Gelombang Vektor Estetik Halus
+                 ================================================================ -->
+            <div class="luxury-landing-pane">
+                <div class="ambient-radial-glow"></div>
+                <div class="ambient-radial-glow-2"></div>
+
+                <!-- SVG Luxury Flowing Waves Vector (#387FB9) -->
+                <svg class="luxury-waves-backdrop" viewBox="0 0 1000 800" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="waveGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#387FB9" stop-opacity="0.14"/>
+                            <stop offset="100%" stop-color="#529cd3" stop-opacity="0.04"/>
+                        </linearGradient>
+                        <linearGradient id="waveGrad2" x1="100%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#225884" stop-opacity="0.10"/>
+                            <stop offset="100%" stop-color="#387FB9" stop-opacity="0.03"/>
+                        </linearGradient>
+                        <linearGradient id="waveRibbon" x1="0%" y1="50%" x2="100%" y2="50%">
+                            <stop offset="0%" stop-color="#387FB9" stop-opacity="0.22"/>
+                            <stop offset="50%" stop-color="#6bafe0" stop-opacity="0.12"/>
+                            <stop offset="100%" stop-color="#225884" stop-opacity="0.04"/>
+                        </linearGradient>
+                    </defs>
+                    <path d="M 0,220 C 320,140 460,420 1000,280 L 1000,800 L 0,800 Z" fill="url(#waveGrad1)"/>
+                    <path d="M 0,460 C 260,340 680,620 1000,480 L 1000,800 L 0,800 Z" fill="url(#waveGrad2)"/>
+                    <path d="M 0,340 C 380,240 520,520 1000,380 L 1000,410 C 520,550 380,270 0,370 Z" fill="url(#waveRibbon)"/>
+                </svg>
+
+                <div class="landing-content-stack">
+
+                    <!-- Top Brand Bar -->
+                    <div class="luxury-brand-nav">
+                        <div class="luxury-brand-group">
+                            <div class="luxury-emblem">
+                                <i class="fas fa-layer-group"></i>
+                            </div>
+                            <div class="luxury-brand-text">
+                                <h2>Sispen</h2>
+                                <span>Sistem Penilaian Kinerja</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Center Stage Content (Tengah Vertikal & Horizontal) -->
+                    <div class="luxury-hero-center">
+                        <h1 class="luxury-hero-title">
+                            Penilaian Kinerja Multi-Arah <span class="title-highlight">yang Objektif &amp; Terukur</span>
+                        </h1>
+
+                        <p class="luxury-hero-lead">
+                            Platform evaluasi kinerja yang menghimpun umpan balik dari atasan dan rekan kerja, didukung pembobotan kriteria terstandarisasi untuk menghasilkan penilaian capaian yang adil dan transparan.
+                        </p>
+                    </div>
+
+                    <!-- Bottom Left Footer -->
+                    <div class="luxury-footer-row">
+                        <span>&copy; 2026 Divisi Sumber Daya Manusia. Seluruh hak cipta dilindungi.</span>
+                        <span>Akses Resmi Pegawai</span>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ================================================================
+                 SISI KANAN (40%): PORTAL FORM MASUK PEGAWAI (BERSIH & PRESISI)
+                 ================================================================ -->
+            <div class="luxury-auth-pane">
+
+                <div class="auth-form-card">
+
+                    <div class="auth-headings-unit">
+                        <h1>Selamat Datang</h1>
+                        <p>Masukkan alamat email dan kata sandi Anda untuk melanjutkan.</p>
+                    </div>
+
+                    <!-- Notification Alert -->
+                    <div class="luxury-alert-banner" id="luxuryAlertBanner">
+                        <i class="fas fa-circle-exclamation" id="luxuryAlertIcon"></i>
+                        <span id="luxuryAlertMsg"></span>
+                    </div>
+
+                    <!-- Form Login -->
+                    <form id="formPortalLogin" onsubmit="event.preventDefault(); submitPortalAuth();">
+                        <div class="form-unit-group">
+                            <div class="form-unit-label-bar">
+                                <label class="form-label-title" for="loginEmailInput">Alamat Email</label>
+                            </div>
+                            <div class="input-shell-container">
+                                <i class="fas fa-envelope input-icon-lead"></i>
+                                <input type="email" id="loginEmailInput" class="form-input-azure" value="hrd@sistempenilaian.com" placeholder="nama@perusahaan.com" required autocomplete="username">
+                            </div>
+                        </div>
+
+                        <div class="form-unit-group">
+                            <div class="form-unit-label-bar">
+                                <label class="form-label-title" for="loginPasswordInput">Kata Sandi</label>
+                            </div>
+                            <div class="input-shell-container">
+                                <i class="fas fa-lock input-icon-lead"></i>
+                                <input type="password" id="loginPasswordInput" class="form-input-azure" value="Admin123!" placeholder="••••••••" required autocomplete="current-password">
+                                <button type="button" class="btn-mask-toggle" onclick="togglePasswordEye()" title="Tampilkan/Sembunyikan sandi" tabindex="-1">
+                                    <i class="fas fa-eye" id="iconEyeToggle"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-remember-row">
+                            <label class="remember-checkbox-box">
+                                <input type="checkbox" id="chkRememberMe" checked>
+                                <span>Ingat saya</span>
+                            </label>
+                            <a href="/Account/ForgotPassword" class="forgot-pass-link" tabindex="-1">Lupa password?</a>
+                        </div>
+
+                        <button type="submit" id="btnSubmitAuth" class="btn-action-primary">
+                            <span>Masuk</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </form>
+
+                    <div class="auth-footer-note">
+                        <span>Akses terbatas khusus pegawai resmi internal perusahaan &bull; v2.0</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Core Scripts -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="~/js/api-config.js" asp-append-version="true"></script>
+
+    <script>
+        // Toggle password show/hide
+        function togglePasswordEye() {
+            var $pwd = $('#loginPasswordInput');
+            var $icon = $('#iconEyeToggle');
+            if ($pwd.attr('type') === 'password') {
+                $pwd.attr('type', 'text');
+                $icon.removeClass('fa-eye').addClass('fa-eye-slash');
+            } else {
+                $pwd.attr('type', 'password');
+                $icon.removeClass('fa-eye-slash').addClass('fa-eye');
+            }
+        }
+
+        // Display Notification Toast
+        function showNotification(message, isSuccess) {
+            var $box = $('#luxuryAlertBanner');
+            var $icon = $('#luxuryAlertIcon');
+            var $msg = $('#luxuryAlertMsg');
+
+            $box.removeClass('alert-has-error alert-has-success');
+            if (isSuccess) {
+                $box.addClass('alert-has-success');
+                $icon.removeClass().addClass('fas fa-circle-check');
+            } else {
+                $box.addClass('alert-has-error');
+                $icon.removeClass().addClass('fas fa-circle-exclamation');
+            }
+            $msg.text(message);
+            $box.css('display', 'flex');
+        }
+
+        // Handle Login Submission
+        function submitPortalAuth() {
+            var email = $('#loginEmailInput').val().trim();
+            var password = $('#loginPasswordInput').val();
+
+            if (!email || !password) {
+                showNotification('Harap masukkan alamat email dan kata sandi.', false);
+                return;
+            }
+
+            $.ajax({
+                url: API_BASE_URL + '/auth/login',
+                type: 'POST',
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify({ email: email, password: password }),
+                beforeSend: function () {
+                    $('#btnSubmitAuth').prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i><span>Memverifikasi...</span>');
+                    $('#luxuryAlertBanner').hide();
+                },
+                success: function (res) {
+                    if (res && res.success && res.token) {
+                        window.AuthSession.setToken(res.token);
+                        window.AuthSession.setUser(res.user);
+
+                        showNotification('Autentikasi berhasil. Mengarahkan ke dashboard...', true);
+
+                        setTimeout(function () {
+                            if (res.user && res.user.roleId === 2) {
+                                window.location.href = '/Karyawan/Beranda';
+                            } else {
+                                window.location.href = '/Admin/Dashboard';
+                            }
+                        }, 500);
+                    } else {
+                        $('#btnSubmitAuth').prop('disabled', false).html('<span>Masuk</span><i class="fas fa-arrow-right"></i>');
+                        showNotification((res && res.message) || 'Alamat email atau kata sandi tidak cocok.', false);
+                    }
+                },
+                error: function (xhr) {
+                    $('#btnSubmitAuth').prop('disabled', false).html('<span>Masuk</span><i class="fas fa-arrow-right"></i>');
+                    var msg = 'Alamat email atau kata sandi tidak cocok.';
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        msg = xhr.responseJSON.message;
+                    }
+                    showNotification(msg, false);
+                }
+            });
+        }
+
+        // Document Ready handler
+        $(function () {
+            var urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('sessionExpired') === '1') {
+                showNotification('Sesi kerja Anda telah berakhir demi keamanan. Silakan masuk kembali.', false);
+                if (window.history && window.history.replaceState) {
+                    window.history.replaceState(null, '', window.location.pathname);
+                }
+            } else {
+                try {
+                    var token = window.AuthSession ? window.AuthSession.getToken() : null;
+                    var user = window.AuthSession ? window.AuthSession.getUser() : null;
+                    if (token && user && user.roleId) {
+                        if (user.roleId === 2) {
+                            window.location.href = '/Karyawan/Dashboard';
+                        } else {
+                            window.location.href = '/Admin/Dashboard';
+                        }
+                    }
+                } catch (e) { }
+            }
+        });
+    </script>
+</body>
+</html>

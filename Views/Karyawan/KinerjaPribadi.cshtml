@@ -1,0 +1,538 @@
+@{
+    ViewData["Title"] = "Rapor Kinerja Pribadi";
+}
+<style>
+    @@media print {
+        .no-print, .sidebar, .topbar, .btn, .content-breadcrumb-bar, .content-action-bar {
+            display: none !important;
+        }
+        .main-content {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100% !important;
+        }
+        .admin-card {
+            box-shadow: none !important;
+            border: 1px solid #cbd5e1 !important;
+        }
+    }
+    .rapor-unified-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+    .rapor-top-section {
+        background: #ffffff;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    .exec-summary-metric {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 0.5rem 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.85rem;
+    }
+    .exec-score-val {
+        font-size: 1.55rem;
+        font-weight: 800;
+        line-height: 1;
+        color: #387FB9;
+        font-family: inherit;
+    }
+    .exec-score-label {
+        font-size: 0.68rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #64748b;
+        letter-spacing: 0.5px;
+    }
+    /* Profil Metadata Dokumen Rapor */
+    .rapor-profile-strip {
+        background: #f8fafc;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 12px 20px;
+    }
+    .profile-meta-label {
+        font-size: 0.68rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #64748b;
+        letter-spacing: 0.4px;
+        margin-bottom: 2px;
+    }
+    .profile-meta-value {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #0f172a;
+    }
+    /* Styling tabel daftar penilaian pribadi */
+    .table-rapor-history {
+        width: 100%;
+        margin-bottom: 0;
+        border-collapse: collapse;
+    }
+    .table-rapor-history thead th {
+        background-color: #f8fafc;
+        color: #475569;
+        font-size: 0.73rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        padding: 10px 14px;
+        border-top: none;
+        border-bottom: 1px solid #e2e8f0;
+        white-space: nowrap;
+    }
+    .table-rapor-history tbody tr {
+        transition: background-color 0.15s ease;
+    }
+    .table-rapor-history tbody tr:hover {
+        background-color: #f8fafc;
+    }
+    .table-rapor-history tbody td {
+        padding: 10px 14px;
+        vertical-align: middle;
+        border-bottom: 1px solid #f1f5f9;
+        color: #1e293b;
+    }
+    /* Styling Tabel Scorecard Evaluasi Resmi (Pengganti Progress Bar) */
+    .table-scorecard-modern {
+        width: 100%;
+        margin-bottom: 0;
+        border-collapse: collapse;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    .table-scorecard-modern thead th {
+        background-color: #f8fafc;
+        color: #334155;
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 11px 14px;
+        border-bottom: 1px solid #cbd5e1;
+        white-space: nowrap;
+    }
+    .table-scorecard-modern tbody td {
+        padding: 11px 14px;
+        vertical-align: middle;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 0.83rem;
+        color: #1e293b;
+    }
+    .table-scorecard-modern tbody tr:hover {
+        background-color: #f8fafc;
+    }
+    .table-scorecard-modern tfoot td {
+        padding: 12px 14px;
+        background-color: #f8fafc;
+        border-top: 2px solid #cbd5e1;
+        font-size: 0.85rem;
+        color: #0f172a;
+    }
+    .btn-detail-rapor {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: linear-gradient(135deg, #387FB9 0%, #2563eb 100%);
+        color: #ffffff !important;
+        font-size: 0.74rem;
+        font-weight: 600;
+        padding: 5px 12px;
+        border-radius: 6px;
+        border: none;
+        text-decoration: none;
+        box-shadow: 0 1px 3px rgba(37, 99, 235, 0.16);
+        transition: all 0.2s ease;
+        white-space: nowrap;
+    }
+    .btn-detail-rapor:hover {
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        box-shadow: 0 3px 6px rgba(37, 99, 235, 0.25);
+        transform: translateY(-1px);
+    }
+</style>
+<!-- Outermost View Wrapper adhering to styling guidelines -->
+<div class="row">
+    <div class="col-12">
+        <!-- Breadcrumb Bar -->
+        <div class="content-breadcrumb-bar mb-2 no-print">
+            <div class="breadcrumb-nav" id="pageBreadcrumb">
+                <span class="breadcrumb-parent">Sistem Penilaian</span>
+                <span class="breadcrumb-separator">/</span>
+                <span class="breadcrumb-current" id="breadcrumbRaporTitle">Rapor Kinerja Pribadi</span>
+            </div>
+        </div>
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- VIEW 1: DAFTAR PENILAIAN KINERJA PRIBADI (LIST TABEL)      -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <div id="viewDaftarRapor">
+            <div class="admin-card mb-4 shadow-sm">
+                <div class="admin-card-header p-3 border-bottom">
+                    <div class="row align-items-center g-2 w-100 m-0">
+                        <div class="col-12 col-md p-0">
+                            <h3 class="admin-card-title mb-1" style="font-size:0.95rem; font-weight:700; color:#0f172a;">
+                                Daftar Penilaian Kinerja Pribadi
+                            </h3>
+                            <p class="admin-card-desc mb-0 text-muted" style="font-size:0.75rem;">
+                                Riwayat evaluasi kinerja yang Anda ikuti beserta perolehan hasil akhir
+                            </p>
+                        </div>
+                        <div class="col-12 col-md-auto ms-md-auto p-0 text-md-end">
+                            <button type="button" class="btn-secondary-admin btn-sm" onclick="loadKaryawanRapor()">
+                                <i class="fas fa-sync-alt me-1"></i> Segarkan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table-rapor-history align-middle" id="tableDaftarRapor">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px; text-align: center;">NO</th>
+                                <th>NAMA PENILAIAN</th>
+                                <th style="width: 170px;" class="text-center">KATEGORI HASIL</th>
+                                <th style="width: 140px;" class="text-center">NILAI AKHIR</th>
+                                <th style="width: 130px;" class="text-end">AKSI</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyDaftarRapor"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- VIEW 2: DETAIL RAPOR NILAI PRIBADI (SCORECARD RESMI)       -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <div id="viewDetailRapor" style="display:none;">
+            <div class="rapor-unified-card mb-4 shadow-sm">
+                <!-- Top Section: Header & Action Bar -->
+                <div class="p-3 p-md-4 rapor-top-section no-print">
+                    <div class="row align-items-center g-3">
+                        <div class="col-12 col-md-8">
+                            <div class="d-flex flex-wrap align-items-center gap-2">
+                                <button type="button" class="btn-secondary-admin btn-sm" onclick="kembaliKeDaftarRapor()">
+                                    <i class="fas fa-arrow-left me-1"></i> Kembali ke Daftar Penilaian
+                                </button>
+                                <span class="text-muted d-none d-sm-inline">|</span>
+                                <strong class="text-dark" id="detailNamaPeriodeHeader" style="font-size:14px;">-</strong>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4 text-md-end">
+                            <button type="button" class="btn-secondary-admin text-nowrap d-inline-flex align-items-center" style="height:36px; padding:0 14px; font-size:12.5px;" onclick="window.print()" title="Cetak Rapor Kinerja">
+                                <i class="fas fa-print me-1.5 text-teal"></i> Cetak Rapor Kinerja
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Profile & Period Identification Strip -->
+                <div class="rapor-profile-strip">
+                    <div class="row g-3">
+                        <div class="col-6 col-md-3">
+                            <div class="profile-meta-label">Nama Karyawan</div>
+                            <div class="profile-meta-value" id="raporNamaKaryawan">-</div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="profile-meta-label">Kode Karyawan</div>
+                            <div class="profile-meta-value font-monospace" id="raporKodeKaryawan">-</div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="profile-meta-label">Periode Evaluasi</div>
+                            <div class="profile-meta-value" id="raporNamaPeriodeMeta">-</div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="profile-meta-label">Status Evaluasi</div>
+                            <div>
+                                <span class="status-pill pill-active" style="padding:2px 8px; font-size:11px;">
+                                    <span class="dot-indicator"></span>Disahkan HRD
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Hero Performance Summary (Skor, Peringkat, Kategori, Rekomendasi) -->
+                <div class="p-3 p-md-4 border-bottom" style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);">
+                    <div class="row g-3">
+                        <!-- Metric 1: Nilai Akhir Kinerja -->
+                        <div class="col-6 col-lg-3">
+                            <div class="p-3 rounded-3 bg-white border h-100 shadow-sm">
+                                <span class="exec-score-label d-block mb-1">Nilai Akhir Kinerja</span>
+                                <div class="d-flex align-items-baseline gap-1">
+                                    <span class="exec-score-val" id="raporSkorAHP">0.00</span>
+                                    <small class="text-muted" style="font-size:11px;">Skor AHP</small>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Metric 2: Peringkat Performa -->
+                        <div class="col-6 col-lg-3">
+                            <div class="p-3 rounded-3 bg-white border h-100 shadow-sm">
+                                <span class="exec-score-label d-block mb-1">Peringkat Performa</span>
+                                <div>
+                                    <span class="status-pill pill-active" style="padding:4px 10px; font-size:12px; font-weight:700;" id="raporRankingBadge">
+                                        Peringkat -
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Metric 3: Kategori Hasil -->
+                        <div class="col-6 col-lg-3">
+                            <div class="p-3 rounded-3 bg-white border h-100 shadow-sm">
+                                <span class="exec-score-label d-block mb-1">Kategori Hasil</span>
+                                <div>
+                                    <span class="status-pill pill-active" style="padding:4px 10px; font-size:12px; font-weight:700;" id="raporKategoriBadge">
+                                        Memuat...
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Metric 4: Rekomendasi Tindak Lanjut -->
+                        <div class="col-6 col-lg-3">
+                            <div class="p-3 rounded-3 bg-white border h-100 shadow-sm">
+                                <span class="exec-score-label d-block mb-1">Rekomendasi HRD</span>
+                                <div>
+                                    <strong class="text-dark" style="font-size:12.5px;" id="raporRekomendasiText">-</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Bottom Section: Official Scorecard Table (Bebas dari Progress Bar) -->
+                <div class="p-3 p-md-4">
+                    <div class="mb-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
+                        <div>
+                            <h5 class="fw-bold mb-1 text-dark" style="font-size:14px;">Kartu Hasil Evaluasi Kompetensi (Scorecard)</h5>
+                            <p class="text-muted mb-0" style="font-size:12px;">Transparansi pembobotan dan capaian skor per aspek kompetensi yang dinilai menggunakan metode 360° &amp; AHP</p>
+                        </div>
+                        <span class="badge bg-light text-secondary border px-2 py-1" style="font-size:11px;">
+                            Skala Nilai: 0 - 100
+                        </span>
+                    </div>
+                    <!-- Modern Scorecard Table (NO PROGRESS BARS) -->
+                    <div class="table-responsive">
+                        <table class="table-scorecard-modern align-middle" id="tableScorecardKriteria">
+                            <thead>
+                                <tr>
+                                    <th style="width: 45px; text-align: center;">NO</th>
+                                    <th>ASPEK KOMPETENSI</th>
+                                    <th style="width: 130px; text-align: center;">BOBOT (%)</th>
+                                    <th style="width: 140px; text-align: center;">NILAI CAPAIAN</th>
+                                    <th style="width: 150px; text-align: center;">KONTRIBUSI SKOR</th>
+                                    <th style="width: 130px; text-align: center;">PREDIKAT</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodyScorecardKriteria"></tbody>
+                            <tfoot id="tfootScorecardKriteria"></tfoot>
+                        </table>
+                    </div>
+                    <!-- HRD Memo / Catatan Pembinaan Khusus -->
+                    <div class="p-3 rounded-3 mt-4 border" style="background:#f0fdfa; border-color:#99f6e4 !important;">
+                        <strong class="d-block mb-1" style="color:#225884; font-size:12.5px;">
+                            <i class="fas fa-comment-dots me-1"></i> Catatan Pembinaan dari Manajemen HRD:
+                        </strong>
+                        <p class="mb-0 text-muted" id="raporCatatanHRD" style="font-size:12px; line-height:1.5;">
+                            Pertahankan kinerja yang baik dan terus tingkatkan kompetensi kerja Anda.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- EMPTY STATE: JIKA BELUM TERDAFTAR ATAU BELUM ADA HASIL    -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <div id="raporEmptyState" class="admin-card p-5 text-center d-none mb-4 shadow-sm">
+            <div class="mb-3">
+                <i class="fas fa-clipboard-question" style="font-size:48px; color:#94a3b8;"></i>
+            </div>
+            <h4 class="fw-bold" style="color:#0f172a;">Laporan Hasil Penilaian Belum Tersedia</h4>
+            <p class="text-muted mx-auto" style="max-width:520px; font-size:13px; line-height:1.6;">
+                Anda belum memiliki riwayat penilaian kinerja atau hasil evaluasi untuk periode yang Anda ikuti belum disahkan oleh manajemen HRD.
+            </p>
+        </div>
+    </div> <!-- Close outer col-12 -->
+</div> <!-- Close outer row -->
+@section Scripts {
+<script>
+    var myRaporHistoryList = [];
+    function loadKaryawanRapor() {
+        var user = window.AuthSession ? window.AuthSession.getUser() : null;
+        var token = window.AuthSession ? window.AuthSession.getToken() : null;
+        if (!user && !token) {
+            window.location.href = '/Account/Login';
+            return;
+        }
+        $('#tbodyDaftarRapor').html('<tr><td colspan="5" class="text-center py-4 text-muted"><i class="fas fa-spinner fa-spin me-2"></i> Memuat daftar penilaian...</td></tr>');
+        var uId = (user && (user.id || user.Id)) ? (user.id || user.Id) : null;
+        var requestUrl = API_BASE_URL + '/hasilpenilaiansistem/my-history' + (uId ? '?userId=' + uId : '');
+        $.ajax({
+            url: requestUrl,
+            type: 'GET',
+            dataType: 'json',
+            success: function (list) {
+                myRaporHistoryList = list || [];
+                if (myRaporHistoryList.length > 0) {
+                    renderDaftarRaporTable();
+                    $('#viewDaftarRapor').show();
+                    $('#viewDetailRapor').hide();
+                    $('#raporEmptyState').addClass('d-none');
+                } else {
+                    $('#viewDaftarRapor').hide();
+                    $('#viewDetailRapor').hide();
+                    $('#raporEmptyState').removeClass('d-none');
+                }
+            },
+            error: function (xhr) {
+                console.error('Gagal loadKaryawanRapor:', xhr);
+                $('#tbodyDaftarRapor').html('<tr><td colspan="5" class="text-center py-4 text-danger"><i class="fas fa-exclamation-triangle me-2"></i> Gagal memuat riwayat penilaian Anda.</td></tr>');
+            }
+        });
+    }
+    function renderDaftarRaporTable() {
+        var html = '';
+        for (var i = 0; i < myRaporHistoryList.length; i++) {
+            var r = myRaporHistoryList[i];
+            var kat = (r.namaKategori || '').toLowerCase();
+            var statusClass = 'pill-role';
+            if (kat.indexOf('sangat baik') !== -1 || kat.indexOf('istimewa') !== -1) statusClass = 'pill-active';
+            else if (kat.indexOf('baik') !== -1) statusClass = 'pill-active';
+            else if (kat.indexOf('cukup') !== -1) statusClass = 'pill-role';
+            else if (kat.indexOf('kurang') !== -1 || kat.indexOf('buruk') !== -1) statusClass = 'pill-inactive';
+            html += '<tr>' +
+                '<td class="text-center fw-bold" style="color:#64748b;">' + (i + 1) + '</td>' +
+                '<td>' +
+                    '<span class="fw-semibold text-dark" style="font-size:0.875rem;">' + escHtml(r.namaPeriode || ('Periode ID: ' + r.periodeId)) + '</span>' +
+                '</td>' +
+                '<td class="text-center">' +
+                    '<span class="status-pill ' + statusClass + '"><span class="dot-indicator"></span>' + escHtml(r.namaKategori || '-') + '</span>' +
+                '</td>' +
+                '<td class="text-center">' +
+                    '<span class="fw-bold font-monospace" style="color:#387FB9; font-size:0.92rem;">' + (r.skorAkhirAHP !== undefined ? r.skorAkhirAHP.toFixed(2) : '0.00') + '</span>' +
+                '</td>' +
+                '<td class="text-end">' +
+                    '<button type="button" class="btn-detail-rapor" onclick="bukaDetailRapor(' + i + ')">' +
+                        '<i class="fas fa-file-alt"></i><span>Lihat Rapor</span>' +
+                    '</button>' +
+                '</td>' +
+            '</tr>';
+        }
+        $('#tbodyDaftarRapor').html(html);
+    }
+    function getPredikatBadge(nilai) {
+        if (nilai >= 85) {
+            return '<span class="status-pill pill-active"><span class="dot-indicator"></span>Sangat Baik</span>';
+        } else if (nilai >= 75) {
+            return '<span class="status-pill pill-active"><span class="dot-indicator"></span>Baik</span>';
+        } else if (nilai >= 60) {
+            return '<span class="status-pill pill-role"><span class="dot-indicator"></span>Cukup</span>';
+        } else {
+            return '<span class="status-pill pill-inactive"><span class="dot-indicator"></span>Kurang</span>';
+        }
+    }
+    function bukaDetailRapor(idx) {
+        var r = myRaporHistoryList[idx];
+        if (!r) return;
+        var namaPeriode = r.namaPeriode || ('Periode ' + r.periodeId);
+        $('#detailNamaPeriodeHeader').text(namaPeriode);
+        $('#breadcrumbRaporTitle').html(
+            '<span style="cursor:pointer;" onclick="kembaliKeDaftarRapor()">Rapor Kinerja Pribadi</span>' +
+            ' <span class="breadcrumb-separator">/</span> ' +
+            escHtml(namaPeriode)
+        );
+        // Profil Dokumen
+        $('#raporNamaKaryawan').text(r.namaKaryawan || '-');
+        $('#raporKodeKaryawan').text(r.kodeKaryawan || '-');
+        $('#raporNamaPeriodeMeta').text(namaPeriode);
+        // Metrik Utama
+        $('#raporSkorAHP').text((r.skorAkhirAHP !== undefined ? r.skorAkhirAHP.toFixed(2) : '0.00'));
+        $('#raporRankingBadge').text('Peringkat #' + r.ranking + ' di Perusahaan');
+        $('#raporRekomendasiText').text(r.rekomendasi || '-');
+        $('#raporCatatanHRD').text(r.catatanHRD ? r.catatanHRD : 'Belum ada catatan khusus dari manajemen HRD untuk periode ini.');
+        var statusClass = 'pill-role';
+        var kat = (r.namaKategori || '').toLowerCase();
+        if (kat.indexOf('sangat baik') !== -1 || kat.indexOf('istimewa') !== -1) statusClass = 'pill-active';
+        else if (kat.indexOf('baik') !== -1) statusClass = 'pill-active';
+        else if (kat.indexOf('cukup') !== -1) statusClass = 'pill-role';
+        else if (kat.indexOf('kurang') !== -1 || kat.indexOf('buruk') !== -1) statusClass = 'pill-inactive';
+        $('#raporKategoriBadge').attr('class', 'status-pill ' + statusClass).html('<span class="dot-indicator"></span>' + escHtml(r.namaKategori || '-'));
+        // ========================================================
+        // TABEL SCORECARD RESMI (NO PROGRESS BARS)
+        // ========================================================
+        var rowsHtml = '';
+        var totalBobot = 0;
+        var sumNilai = 0;
+        var countKriteria = 0;
+        if (r.kriteriaNilai && r.kriteriaNilai.length > 0) {
+            countKriteria = r.kriteriaNilai.length;
+            for (var k = 0; k < r.kriteriaNilai.length; k++) {
+                var item = r.kriteriaNilai[k];
+                var pctBobot = (item.bobot * 100);
+                totalBobot += pctBobot;
+                sumNilai += item.nilaiRataRata;
+                var kontribusi = item.nilaiTertimbang !== undefined ? item.nilaiTertimbang : (item.nilaiRataRata * item.bobot);
+                rowsHtml += '<tr>' +
+                    '<td class="text-center fw-bold" style="color:#64748b;">' + (k + 1) + '</td>' +
+                    '<td><strong style="color:#0f172a;">' + escHtml(item.namaKriteria) + '</strong></td>' +
+                    '<td class="text-center font-monospace">' + pctBobot.toFixed(1) + '%</td>' +
+                    '<td class="text-center font-monospace fw-semibold" style="color:#0f172a;">' + item.nilaiRataRata.toFixed(2) + '</td>' +
+                    '<td class="text-center font-monospace fw-bold" style="color:#387FB9;">' + kontribusi.toFixed(2) + '</td>' +
+                    '<td class="text-center">' + getPredikatBadge(item.nilaiRataRata) + '</td>' +
+                '</tr>';
+            }
+        } else {
+            var fallback = [
+                { kode: 'C1', nama: 'Kerjasama Tim', val: r.rata2_KerjasamaTim, bobot: 0.15 },
+                { kode: 'C2', nama: 'Ketepatan Waktu', val: r.rata2_KetepatanWaktu, bobot: 0.20 },
+                { kode: 'C3', nama: 'Tanggung Jawab', val: r.rata2_TanggungJawab, bobot: 0.25 },
+                { kode: 'C4', nama: 'Inisiatif', val: r.rata2_Inisiatif, bobot: 0.10 },
+                { kode: 'C5', nama: 'Keterlibatan Kerja', val: r.rata2_KeterlibatanKerja, bobot: 0.10 },
+                { kode: 'C6', nama: 'Interaksi Kolega', val: r.rata2_InteraksiKolega, bobot: 0.05 },
+                { kode: 'C7', nama: 'Tindak Lanjut', val: r.rata2_TindakLanjut, bobot: 0.15 }
+            ];
+            countKriteria = fallback.length;
+            for (var f = 0; f < fallback.length; f++) {
+                var itm = fallback[f];
+                var pctB = (itm.bobot * 100);
+                totalBobot += pctB;
+                sumNilai += (itm.val || 0);
+                var kontrib = ((itm.val || 0) * itm.bobot);
+                rowsHtml += '<tr>' +
+                    '<td class="text-center fw-bold" style="color:#64748b;">' + (f + 1) + '</td>' +
+                    '<td><strong style="color:#0f172a;">' + escHtml(itm.nama) + '</strong></td>' +
+                    '<td class="text-center font-monospace">' + pctB.toFixed(1) + '%</td>' +
+                    '<td class="text-center font-monospace fw-semibold" style="color:#0f172a;">' + (itm.val !== undefined ? itm.val.toFixed(2) : '0.00') + '</td>' +
+                    '<td class="text-center font-monospace fw-bold" style="color:#387FB9;">' + kontrib.toFixed(2) + '</td>' +
+                    '<td class="text-center">' + getPredikatBadge(itm.val || 0) + '</td>' +
+                '</tr>';
+            }
+        }
+        $('#tbodyScorecardKriteria').html(rowsHtml);
+        // Footer Total Akumulasi
+        var tfootHtml = '<tr>' +
+            '<td colspan="2" class="text-end fw-bold text-uppercase" style="letter-spacing:0.5px;">Akumulasi Nilai Kinerja Akhir (AHP):</td>' +
+            '<td class="text-center font-monospace fw-bold">' + Math.round(totalBobot) + '%</td>' +
+            '<td class="text-center font-monospace fw-bold">' + (countKriteria > 0 ? (sumNilai / countKriteria).toFixed(2) : '0.00') + '</td>' +
+            '<td class="text-center font-monospace fw-bold" style="color:#387FB9; font-size:1rem;">' + (r.skorAkhirAHP !== undefined ? r.skorAkhirAHP.toFixed(2) : '0.00') + '</td>' +
+            '<td class="text-center">' +
+                '<span class="status-pill ' + statusClass + '"><span class="dot-indicator"></span>' + escHtml(r.namaKategori || '-') + '</span>' +
+            '</td>' +
+        '</tr>';
+        $('#tfootScorecardKriteria').html(tfootHtml);
+        $('#viewDaftarRapor').hide();
+        $('#viewDetailRapor').show();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    function kembaliKeDaftarRapor() {
+        $('#breadcrumbRaporTitle').text('Rapor Kinerja Pribadi');
+        $('#viewDetailRapor').hide();
+        $('#viewDaftarRapor').show();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    $(function () {
+        loadKaryawanRapor();
+    });
+</script>
+}
